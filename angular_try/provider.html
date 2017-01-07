@@ -1,0 +1,62 @@
+ <!DOCTYPE html>
+ <html>
+ <head>
+ 	<meta charset="utf-8">
+ 	<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+ </head>
+ <body>
+
+ 	<div ng-app="MyModule">
+ 		<div ng-controller="myController">{{name}}</div>
+ 		<div ng-controller="myController2"></div>
+ 		<div ng-controller="myController3"></div>
+ 		<div ng-controller="myController4"></div>
+ 	</div>
+ 	<form action="/example/html5/demo_form.asp" method="get">
+ 	Name: <input type="text" name="usr_name" />
+ 		<input type="submit" value="提交" />
+ 	</form>
+ 	<script>
+ 		var person =function(name){
+ 			this.name=name
+ 		}
+	var myMod=angular.module('MyModule',[]) //[] inject
+	myMod.provider('myProvider',function(){
+		var ownName='MyProvider'
+		this.setName=function(name){
+			ownName=name
+		}
+		this.$get=function(){
+			return new person('Olmsted (from '+ownName+')')
+		}
+	})
+	myMod.factory('myFactory',function(){ //how to use scope with provider
+		//return new person('Olmsted (from factory)')
+		return [1,2,3]
+	})
+	myMod.service('myService',function(){ //only output an object
+		return new person('Olmsted (from factory)')
+		//return [1,1] output undifined
+
+	})
+	myMod.controller('myController',['$scope',function($scope){
+		//console.log('this is '+myProvider.name)
+		$scope.name='test'
+		
+	}])
+	myMod.controller('myController2',function(myProvider){
+		console.log('this is second '+myProvider.name)
+	})
+	myMod.controller('myController3',function(myFactory){
+		console.log('this is  '+myFactory)
+	})
+	myMod.controller('myController4',function(myService){
+		console.log('this is  '+myService.value)
+	})
+	myMod.config(function(myProviderProvider){
+		myProviderProvider.setName('myProvider new name')
+	})
+
+</script>
+</body>
+</html> 
